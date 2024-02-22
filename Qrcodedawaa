@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #qrcode {
+            margin-top: 20px;
+        }
+        .input-container {
+            position: relative;
+            display: inline-block;
+        }
+        .input-shadow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: transparent;
+            pointer-events: none;
+        }
+        #number {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>QR Code Generator</h1>
+    <div class="input-container">
+        <input type="text" id="number" placeholder="Enter Number">
+        <div class="input-shadow" id="numberShadow"></div>
+    </div>
+    <button onclick="generateQR()">Generate QR Code</button>
+    <div id="qrcode"></div>
+
+    <script>
+        function generateQR() {
+            var inputNumber = document.getElementById('number').value;
+            // Base number with 'xxxxxx' part
+            var baseNumber = "100000000xxxxxx1725073110ve090a#2127608752238";
+            // Replace 'xxxxxx' with input number
+            var replacedNumber = baseNumber.replace(/x+/g, inputNumber);
+            // Randomly generate last two digits
+            var randomDigits = Math.floor(Math.random() * 100);
+            randomDigits = randomDigits.toString().padStart(2, '0');
+            // Replace last two digits
+            var finalNumber = replacedNumber.slice(0, -2) + randomDigits;
+
+            // Generate QR code using QR Code API
+            var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(finalNumber) + "&size=300x300";
+            document.getElementById('qrcode').innerHTML = "<img src='" + qrUrl + "' alt='QR Code'>";
+        }
+
+        // Update shadow text
+        var input = document.getElementById('number');
+        var shadow = document.getElementById('numberShadow');
+        input.addEventListener('input', function() {
+            shadow.textContent = this.value;
+        });
+    </script>
+</body>
+</html>
